@@ -1,0 +1,17 @@
+{
+  "name": "@pulseai/styles",
+  "version": "0.0.0",
+  "description": "Bulma-equivalent utility CSS helpers and base reset for the PulseAI Design System",
+  "type": "module",
+  "main": "./src/index.css",
+  "exports": {
+    ".": "./src/index.css",
+    "./*": "./src/*"
+  },
+  "files": ["src"],
+  "sideEffects": ["src/**/*.css"],
+  "scripts": {
+    "build": "echo \"no build step: pure CSS\"",
+    "test": "echo \"no tests in styles package\""
+  }
+}

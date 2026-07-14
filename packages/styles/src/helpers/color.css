@@ -1,0 +1,25 @@
+/**
+ * Color helpers, like Bulma's has-text-* / has-background-* utilities.
+ */
+.has-text-white { color: var(--pai-color-white) !important; }
+.has-text-black { color: var(--pai-color-black) !important; }
+.has-text-primary { color: var(--pai-color-primary) !important; }
+.has-text-link { color: var(--pai-color-link) !important; }
+.has-text-info { color: var(--pai-color-info) !important; }
+.has-text-success { color: var(--pai-color-success) !important; }
+.has-text-warning { color: var(--pai-color-warning) !important; }
+.has-text-danger { color: var(--pai-color-danger) !important; }
+.has-text-grey { color: var(--pai-color-grey) !important; }
+.has-text-grey-light { color: var(--pai-color-grey-light) !important; }
+.has-text-grey-dark { color: var(--pai-color-grey-dark) !important; }
+
+.has-background-white { background-color: var(--pai-color-white) !important; }
+.has-background-black { background-color: var(--pai-color-black) !important; }
+.has-background-primary { background-color: var(--pai-color-primary) !important; }
+.has-background-link { background-color: var(--pai-color-link) !important; }
+.has-background-info { background-color: var(--pai-color-info) !important; }
+.has-background-success { background-color: var(--pai-color-success) !important; }
+.has-background-warning { background-color: var(--pai-color-warning) !important; }
+.has-background-danger { background-color: var(--pai-color-danger) !important; }
+.has-background-white-ter { background-color: var(--pai-color-white-ter) !important; }
+.has-background-white-bis { background-color: var(--pai-color-white-bis) !important; }

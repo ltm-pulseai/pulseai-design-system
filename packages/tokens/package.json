@@ -1,0 +1,24 @@
+{
+  "name": "@pulseai/tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for the PulseAI Design System",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./tokens.css": "./src/tokens.css"
+  },
+  "files": ["dist", "src/tokens.css"],
+  "sideEffects": ["src/tokens.css"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo \"no tests in tokens package\""
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

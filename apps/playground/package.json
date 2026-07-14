@@ -1,0 +1,25 @@
+{
+  "name": "playground",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build"
+  },
+  "dependencies": {
+    "@pulseai/components": "workspace:*",
+    "@pulseai/tokens": "workspace:*",
+    "@pulseai/styles": "workspace:*",
+    "lit": "^3.2.0"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^8.3.0",
+    "@storybook/addon-essentials": "^8.3.0",
+    "@storybook/web-components": "^8.3.0",
+    "@storybook/web-components-vite": "^8.3.0",
+    "storybook": "^8.3.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0"
+  }
+}

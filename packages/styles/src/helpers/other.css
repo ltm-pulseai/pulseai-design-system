@@ -1,0 +1,35 @@
+/**
+ * Miscellaneous helpers, like Bulma's is-clearfix / is-unselectable / is-relative utilities.
+ */
+.is-clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.is-pulled-left { float: left !important; }
+.is-pulled-right { float: right !important; }
+
+.is-unselectable {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.is-clickable { cursor: pointer !important; }
+.is-not-clickable { pointer-events: none !important; cursor: default !important; }
+
+.is-relative { position: relative !important; }
+
+.is-clipped { overflow: hidden !important; }
+
+.is-radiusless { border-radius: 0 !important; }
+.is-shadowless { box-shadow: none !important; }
+
+.is-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+}
+
+.is-block { display: block !important; }
+.is-inline { display: inline !important; }
+.is-inline-block { display: inline-block !important; }

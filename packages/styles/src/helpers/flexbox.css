@@ -1,0 +1,44 @@
+/**
+ * Flexbox helpers, like Bulma's is-flex-* utilities.
+ */
+.is-flex { display: flex !important; }
+.is-inline-flex { display: inline-flex !important; }
+
+.is-flex-direction-row { flex-direction: row !important; }
+.is-flex-direction-row-reverse { flex-direction: row-reverse !important; }
+.is-flex-direction-column { flex-direction: column !important; }
+.is-flex-direction-column-reverse { flex-direction: column-reverse !important; }
+
+.is-flex-wrap-nowrap { flex-wrap: nowrap !important; }
+.is-flex-wrap-wrap { flex-wrap: wrap !important; }
+.is-flex-wrap-wrap-reverse { flex-wrap: wrap-reverse !important; }
+
+.is-justify-content-start { justify-content: flex-start !important; }
+.is-justify-content-end { justify-content: flex-end !important; }
+.is-justify-content-center { justify-content: center !important; }
+.is-justify-content-space-between { justify-content: space-between !important; }
+.is-justify-content-space-around { justify-content: space-around !important; }
+.is-justify-content-space-evenly { justify-content: space-evenly !important; }
+
+.is-align-items-start { align-items: flex-start !important; }
+.is-align-items-end { align-items: flex-end !important; }
+.is-align-items-center { align-items: center !important; }
+.is-align-items-baseline { align-items: baseline !important; }
+.is-align-items-stretch { align-items: stretch !important; }
+
+.is-align-content-start { align-content: flex-start !important; }
+.is-align-content-end { align-content: flex-end !important; }
+.is-align-content-center { align-content: center !important; }
+.is-align-content-space-between { align-content: space-between !important; }
+.is-align-content-stretch { align-content: stretch !important; }
+
+.is-align-self-auto { align-self: auto !important; }
+.is-align-self-start { align-self: flex-start !important; }
+.is-align-self-end { align-self: flex-end !important; }
+.is-align-self-center { align-self: center !important; }
+.is-align-self-stretch { align-self: stretch !important; }
+
+.is-flex-grow-0 { flex-grow: 0 !important; }
+.is-flex-grow-1 { flex-grow: 1 !important; }
+.is-flex-shrink-0 { flex-shrink: 0 !important; }
+.is-flex-shrink-1 { flex-shrink: 1 !important; }

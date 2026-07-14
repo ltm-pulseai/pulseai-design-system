@@ -20,6 +20,7 @@ export class PaiNotification extends PaiElement {
         display: block;
         position: relative;
         border-radius: var(--pai-radius-normal);
+        border-left: 4px solid var(--pai-color-grey-light);
         padding: var(--pai-space-4) var(--pai-space-5);
         padding-right: var(--pai-space-6);
         background-color: var(--pai-color-white-ter);
@@ -34,6 +35,14 @@ export class PaiNotification extends PaiElement {
         right: var(--pai-space-3);
       }
 
+      :host([color='primary']),
+      :host([color='link']),
+      :host([color='info']),
+      :host([color='success']),
+      :host([color='warning']),
+      :host([color='danger']) {
+        border-left-color: transparent;
+      }
       :host([color='primary']) {
         background-color: var(--pai-color-primary);
         color: var(--pai-color-primary-invert);

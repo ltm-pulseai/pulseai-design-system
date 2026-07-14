@@ -14,6 +14,8 @@ export class PaiBox extends PaiElement {
       :host {
         display: block;
         background-color: var(--pai-color-surface);
+        backdrop-filter: var(--pai-surface-backdrop-filter);
+        border: 1px solid var(--pai-color-border);
         border-radius: var(--pai-radius-large);
         box-shadow: var(--pai-shadow-normal);
         padding: var(--pai-space-5);

@@ -14,6 +14,11 @@ const preview: Preview = {
       config: {},
       options: { restoreScroll: true },
     },
+    options: {
+      storySort: {
+        order: ['Getting Started', 'Elements', 'Layout', 'Form', 'Components', 'Patterns', ['Molecules', 'Organisms'], 'Utilities'],
+      },
+    },
   },
   globalTypes: {
     theme: {
@@ -22,7 +27,7 @@ const preview: Preview = {
       toolbar: {
         title: 'Theme',
         icon: 'circlehollow',
-        items: ['light', 'dark'],
+        items: ['light', 'dark', 'ocean', 'sunset', 'forest', 'slate', 'bootstrap', 'material', 'nova'],
         dynamicTitle: true,
       },
     },

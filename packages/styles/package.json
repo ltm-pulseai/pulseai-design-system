@@ -1,7 +1,7 @@
 {
   "name": "@pulseai/styles",
   "version": "0.0.0",
-  "description": "Bulma-equivalent utility CSS helpers and base reset for the PulseAI Design System",
+  "description": "Optional utility CSS helpers and base reset for the PulseAI Design Language",
   "type": "module",
   "main": "./src/index.css",
   "exports": {

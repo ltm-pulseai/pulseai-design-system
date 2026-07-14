@@ -3,10 +3,10 @@ import './pai-modal.js';
 import type { PaiModal } from './pai-modal.js';
 
 describe('pai-modal', () => {
-  it('renders a dialog with aria-modal when open', async () => {
+  it('opens the native <dialog> modally', async () => {
     const el = await fixture<PaiModal>(html`<pai-modal open>Title<button slot="body">Focus me</button></pai-modal>`);
-    const dialog = el.shadowRoot!.querySelector('[role="dialog"]')!;
-    expect(dialog.getAttribute('aria-modal')).to.equal('true');
+    const dialog = el.shadowRoot!.querySelector('dialog')!;
+    expect(dialog.open).to.be.true;
   });
 
   it('moves focus into the dialog on open', async () => {
@@ -19,7 +19,7 @@ describe('pai-modal', () => {
     expect(document.activeElement?.id).to.equal('target');
   });
 
-  it('closes on Escape and restores focus, firing pai-close', async () => {
+  it('syncs state and restores focus when the native dialog closes', async () => {
     const trigger = document.createElement('button');
     document.body.appendChild(trigger);
     trigger.focus();
@@ -28,9 +28,8 @@ describe('pai-modal', () => {
     el.show();
     await el.updateComplete;
 
-    setTimeout(() =>
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })),
-    );
+    const dialog = el.shadowRoot!.querySelector('dialog')!;
+    setTimeout(() => dialog.close());
     const event = await oneEvent(el, 'pai-close');
     expect(event).to.exist;
     expect(el.open).to.be.false;

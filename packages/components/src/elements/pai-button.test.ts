@@ -51,8 +51,33 @@ describe('pai-button', () => {
     expect(event).to.exist;
   });
 
+  it('reflects variant independently of color', async () => {
+    const el = await fixture<PaiButton>(
+      html`<pai-button color="danger" variant="soft">Go</pai-button>`,
+    );
+    expect(el.getAttribute('color')).to.equal('danger');
+    expect(el.getAttribute('variant')).to.equal('soft');
+  });
+
+  it('defaults to the filled variant', async () => {
+    const el = await fixture<PaiButton>(html`<pai-button>Go</pai-button>`);
+    expect(el.getAttribute('variant')).to.equal('filled');
+  });
+
   it('is accessible', async () => {
     const el = await fixture<PaiButton>(html`<pai-button>Accessible button</pai-button>`);
+    await expect(el).to.be.accessible();
+  });
+
+  it('is accessible in every variant', async () => {
+    const el = await fixture<HTMLElement>(html`
+      <div>
+        <pai-button color="primary" variant="filled">Filled</pai-button>
+        <pai-button color="primary" variant="outlined">Outlined</pai-button>
+        <pai-button color="primary" variant="soft">Soft</pai-button>
+        <pai-button color="primary" variant="text">Text</pai-button>
+      </div>
+    `);
     await expect(el).to.be.accessible();
   });
 });

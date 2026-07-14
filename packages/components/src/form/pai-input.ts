@@ -1,5 +1,5 @@
 import { html, css, nothing } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query } from 'lit/decorators.js';
 import { PaiElement } from '../base/pai-element.js';
 import { FormAssociatedMixin } from '../base/form-associated-mixin.js';
 
@@ -32,17 +32,23 @@ export class PaiInput extends FormAssociatedMixin(PaiElement) {
       input {
         box-sizing: border-box;
         width: 100%;
-        padding: calc(0.5em - 1px) 0.75em;
+        padding: calc(0.5em - 1px) 0.85em;
         border: 1px solid var(--pai-color-border);
         border-radius: var(--pai-radius-normal);
-        background-color: var(--pai-color-white);
+        background-color: var(--pai-color-surface);
         color: var(--pai-color-text);
         font: inherit;
         font-size: var(--pai-font-size-6);
+        transition: border-color var(--pai-duration-fast) var(--pai-easing),
+          box-shadow var(--pai-duration-fast) var(--pai-easing);
+      }
+      input:hover:not(:disabled) {
+        border-color: var(--pai-color-grey-light);
       }
       input:focus-visible {
-        outline: 2px solid var(--pai-color-link);
-        outline-offset: 1px;
+        outline: none;
+        border-color: var(--pai-color-link);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--pai-color-link) 20%, transparent);
       }
       input:disabled {
         opacity: 0.5;
@@ -51,8 +57,14 @@ export class PaiInput extends FormAssociatedMixin(PaiElement) {
       :host([color='success']) input {
         border-color: var(--pai-color-success);
       }
+      :host([color='success']) input:focus-visible {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--pai-color-success) 20%, transparent);
+      }
       :host([color='danger']) input {
         border-color: var(--pai-color-danger);
+      }
+      :host([color='danger']) input:focus-visible {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--pai-color-danger) 20%, transparent);
       }
       .help {
         margin-top: var(--pai-space-1);
@@ -91,9 +103,18 @@ export class PaiInput extends FormAssociatedMixin(PaiElement) {
   @property({ type: Boolean, reflect: true }) readonly = false;
   @property({ type: Boolean, reflect: true }) required = false;
 
+  @query('#control') private _controlEl?: HTMLInputElement;
+
   updated(changed: Map<string, unknown>) {
     if (changed.has('value')) {
       this.internals.setFormValue(this.value);
+    }
+    if (this._controlEl) {
+      this.internals.setValidity(
+        this._controlEl.validity,
+        this._controlEl.validationMessage,
+        this._controlEl,
+      );
     }
   }
 

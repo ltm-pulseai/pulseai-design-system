@@ -1,16 +1,21 @@
-# PulseAI Design System
+# PulseAI Design Language
 
-A framework-agnostic, accessible, extensible Web Component library covering the same
-capability surface as [Bulma](https://bulma.io) — layout primitives, elements, form
-controls, and interactive components — built with [Lit](https://lit.dev).
+A framework-agnostic, accessible, extensible Web Component library built with
+[Lit](https://lit.dev) — layout primitives, elements, form controls, and interactive
+components. Components are driven by two independent, typed props: `color` (semantic
+intent) and `variant` (visual treatment — `filled` / `outlined` / `text` / `soft`), so
+they compose freely instead of relying on combinable utility classes. Nine themes ship
+out of the box, including presets that reskin the same components to sit alongside a
+Bootstrap or Material app, and a gradient/glass "AI product" theme (`nova`) — see
+[Theming](#theming).
 
 ## Packages
 
 | Package | Description |
 | --- | --- |
-| [`@pulseai/tokens`](packages/tokens) | Design tokens as CSS custom properties (`tokens.css`) and TypeScript constants (color, spacing, typography, radius, shadow, breakpoints, z-index, motion). |
-| [`@pulseai/components`](packages/components) | ~36 Lit-based custom elements (`pai-*`), Shadow DOM encapsulated, themed via the tokens' CSS custom properties. |
-| [`@pulseai/styles`](packages/styles) | Bulma-equivalent utility CSS classes (`m-*`, `has-text-*`, `is-flex`, ...) and a base reset, for use on plain HTML alongside the components. |
+| [`@pulseai/tokens`](packages/tokens) | Design tokens as CSS custom properties (`tokens.css`) and TypeScript constants (color, spacing, typography, radius, shadow, breakpoints, z-index, motion) — both a numeric and a named (`xs`/`sm`/`md`/...) scale. |
+| [`@pulseai/components`](packages/components) | ~40 Lit-based custom elements (`pai-*`), Shadow DOM encapsulated, themed via the tokens' CSS custom properties. |
+| [`@pulseai/styles`](packages/styles) | Optional utility CSS classes (`m-*`, `has-text-*`, `is-flex`, ...) and a base reset, for plain HTML that isn't using the components. |
 | [`apps/playground`](apps/playground) | Storybook — browse every component, its props/slots/events, and interactive controls. |
 
 ## Quick start
@@ -56,11 +61,16 @@ globally or per-subtree:
 }
 ```
 
-Dark mode is a `data-theme="dark"` attribute on `<html>` (or any ancestor):
+Switch themes with a `data-theme` attribute on `<html>` (or any ancestor):
 
 ```html
 <html data-theme="dark">
 ```
+
+Nine themes ship out of the box: `light`, `dark`, `ocean`, `sunset`, `forest`, `slate`,
+`bootstrap`, `material`, `nova`. `bootstrap`/`material` reskin shadows, radius, and font
+family to sit alongside those ecosystems' own apps; `nova` is a dark, gradient-accented,
+glass-surfaced theme for an "AI product" look.
 
 ## Accessibility
 

@@ -17,9 +17,17 @@ export class PaiCard extends PaiElement {
       :host {
         display: block;
         background-color: var(--pai-color-surface);
+        backdrop-filter: var(--pai-surface-backdrop-filter);
+        border: 1px solid var(--pai-color-border);
         border-radius: var(--pai-radius-large);
         box-shadow: var(--pai-shadow-normal);
         overflow: hidden;
+        transition: box-shadow var(--pai-duration-normal) var(--pai-easing),
+          transform var(--pai-duration-normal) var(--pai-easing);
+      }
+      :host(:hover) {
+        box-shadow: var(--pai-shadow-large);
+        transform: translateY(-2px);
       }
       .content {
         padding: var(--pai-space-5);

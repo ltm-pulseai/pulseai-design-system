@@ -1,0 +1,120 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Getting Started" />
+
+# PulseAI Design Language
+
+A framework-agnostic, accessible, extensible Web Component library built with
+[Lit](https://lit.dev) — layout primitives, elements, form controls, and interactive
+components. Two independent, typed props drive every component's look: `color`
+(semantic intent: `primary`, `danger`, ...) and `variant` (visual treatment: `filled`,
+`outlined`, `text`, `soft`) — see `pai-button`'s **Variants** story for the full matrix.
+
+## Install
+
+```bash
+pnpm add @pulseai/tokens @pulseai/components @pulseai/styles
+```
+
+## Quick start
+
+```html
+<link rel="stylesheet" href="node_modules/@pulseai/tokens/src/tokens.css" />
+<link rel="stylesheet" href="node_modules/@pulseai/styles/src/index.css" />
+<script type="module">
+  import '@pulseai/components/elements/pai-button.js';
+</script>
+
+<pai-button color="primary">Click me</pai-button>
+```
+
+Or register the whole library from the barrel:
+
+```ts
+import '@pulseai/components'; // registers every element
+import { PaiButton } from '@pulseai/components'; // types
+```
+
+## Packages
+
+| Package | What it gives you |
+| --- | --- |
+| `@pulseai/tokens` | Design tokens as CSS custom properties (`--pai-*`) and TypeScript constants. |
+| `@pulseai/components` | ~40 Lit custom elements (`pai-*`) — see the **Elements**, **Layout**, **Form**, and **Components** sections in the sidebar. |
+| `@pulseai/styles` | Optional utility classes (`m-*`, `has-text-*`, `is-flex`, ...) for plain HTML that isn't using the components — see **Utilities**. |
+
+## Composability: Patterns
+
+The **Patterns** section shows the same primitives assembled into higher-level pieces:
+
+- **Molecules** — `pai-search-bar` (input + button), `pai-stat-card` (box + tag), `pai-alert-banner` (icon + message + actions).
+- **Organisms** — `pai-login-form` (inputs + checkbox + button), `pai-page-header` (breadcrumb + title), `pai-data-table` (search-bar + table + pagination).
+
+Each pattern component is plain source you can read and copy — composition, not magic.
+
+## Theming
+
+Every component reads color/spacing/typography from CSS custom properties, which cross
+the Shadow DOM boundary naturally. Switch the whole system with a single attribute:
+
+```html
+<html data-theme="dark">
+```
+
+Nine themes ship out of the box — use the **theme toolbar** (top of this page) to switch
+live: `light`, `dark`, `ocean`, `sunset`, `forest`, `slate`, `bootstrap`, `material`, `nova`.
+Themes aren't just recolors:
+
+- `sunset`/`slate`/`bootstrap`/`material` also change corner radius and shadow language —
+  `bootstrap` and `material` specifically reskin these components to sit alongside/inside
+  a Bootstrap or Material Design app without clashing, since every visual property is a
+  token, not a hardcoded value.
+- `nova` is a dark, gradient-accented, glass-surfaced theme for an "AI product" look —
+  `pai-button`'s primary variant and `pai-hero` read a `--pai-gradient-accent` token
+  (a plain color in every other theme, a gradient here), and `pai-box`/`pai-card` read
+  `--pai-surface-backdrop-filter` for the frosted-glass effect.
+
+Override any token globally or per-subtree:
+
+```css
+:root {
+  --pai-color-primary: #7c3aed;
+}
+```
+
+## Framework flexibility
+
+These are native [custom elements](https://developer.mozilla.org/en-US/docs/Web/API/Web_components),
+not React/Vue components — they work unmodified anywhere the DOM does:
+
+```jsx
+// React (19+ handles custom element props/events natively; use a wrapper like
+// @lit/react's createComponent for typed props on older React)
+<pai-button color="primary" onClick={() => save()}>Save</pai-button>
+```
+
+```vue
+<!-- Vue -->
+<pai-button color="primary" @click="save">Save</pai-button>
+```
+
+```html
+<!-- Plain HTML, or dropped into an existing Bootstrap/Material app —
+     Shadow DOM means their styles can't leak in or out. -->
+<pai-button color="primary">Save</pai-button>
+```
+
+## Accessibility
+
+- Interactive components follow the relevant [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/)
+  pattern — modal (focus trap, `Escape`, focus return), dropdown (`aria-expanded`, arrow-key
+  nav), tabs (roving tabindex, arrow/Home/End nav).
+- Form controls are [form-associated custom elements](https://web.dev/articles/more-capable-form-controls)
+  — they participate in native `<form>` submission and `checkValidity()`/`reportValidity()`.
+- Every component ships an automated `axe-core` accessibility test.
+
+## Where to go next
+
+- Browse **Elements**, **Layout**, **Form**, and **Components** for the full primitive set.
+- Browse **Patterns** for composed molecules/organisms.
+- Browse **Utilities/Overview** for the CSS helper classes.

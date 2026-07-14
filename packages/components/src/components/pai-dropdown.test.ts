@@ -15,7 +15,7 @@ describe('pai-dropdown', () => {
     trigger.click();
     await el.updateComplete;
     expect(el.open).to.be.true;
-    expect(el.shadowRoot!.querySelector('.menu')!.hasAttribute('hidden')).to.be.false;
+    expect(el.shadowRoot!.querySelector('.menu')!.matches(':popover-open')).to.be.true;
   });
 
   it('closes on Escape and returns focus to the trigger', async () => {

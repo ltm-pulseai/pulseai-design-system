@@ -2,7 +2,7 @@
   "name": "pulseai-design-system",
   "private": true,
   "version": "0.0.0",
-  "description": "PulseAI Design System — Bulma-parity Web Component library built with Lit",
+  "description": "PulseAI Design Language — a token- and variant-driven Web Component library built with Lit",
   "type": "module",
   "engines": {
     "node": ">=18.19"

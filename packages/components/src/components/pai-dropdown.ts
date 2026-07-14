@@ -6,6 +6,11 @@ import { PaiElement } from '../base/pai-element.js';
  * @summary A trigger + popup menu, like Bulma's `.dropdown`, following the WAI-ARIA
  * menu-button pattern: trigger has `aria-haspopup`/`aria-expanded`, `Escape`/outside-click
  * closes, and Arrow Up/Down move focus among slotted menu items.
+ *
+ * The menu uses the Popover API (`popover="manual"`) so it renders in the browser's top
+ * layer — immune to clipping from an ancestor's `overflow: hidden` or `transform` (e.g. a
+ * card, a scroll container, or Storybook's own docs-canvas zoom wrapper). Position is
+ * computed from the trigger's bounding rect on open.
  * @slot trigger - The trigger control (e.g. a `pai-button`).
  * @slot - Menu items (elements with `role="menuitem"`, e.g. `<a role="menuitem">`).
  */
@@ -15,25 +20,27 @@ export class PaiDropdown extends PaiElement {
     PaiElement.styles,
     css`
       :host {
-        position: relative;
         display: inline-block;
       }
       .trigger {
         display: inline-block;
       }
       .menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: var(--pai-z-dropdown, 20);
-        margin-top: var(--pai-space-1);
+        position: fixed;
+        margin: 0;
+        border: none;
+        padding: var(--pai-space-2) 0;
         min-width: 12rem;
-        background-color: var(--pai-color-white);
+        max-width: 20rem;
+        max-height: 60vh;
+        overflow: auto;
+        background-color: var(--pai-color-surface);
+        color: var(--pai-color-text);
         border-radius: var(--pai-radius-normal);
         box-shadow: var(--pai-shadow-normal);
-        padding: var(--pai-space-2) 0;
+        z-index: var(--pai-z-dropdown, 20);
       }
-      .menu[hidden] {
+      .menu:not(:popover-open) {
         display: none;
       }
       ::slotted([role='menuitem']) {
@@ -56,16 +63,43 @@ export class PaiDropdown extends PaiElement {
 
   @query('.trigger-slot') private _triggerSlot!: HTMLSlotElement;
   @query('.menu-slot') private _menuSlot!: HTMLSlotElement;
+  @query('.menu') private _menuEl!: HTMLElement;
 
   connectedCallback() {
     super.connectedCallback();
     document.addEventListener('click', this._onDocumentClick);
+    window.addEventListener('resize', this._onViewportChange);
+    window.addEventListener('scroll', this._onViewportChange, true);
   }
 
   disconnectedCallback() {
     document.removeEventListener('click', this._onDocumentClick);
+    window.removeEventListener('resize', this._onViewportChange);
+    window.removeEventListener('scroll', this._onViewportChange, true);
     super.disconnectedCallback();
   }
+
+  updated(changed: Map<string, unknown>) {
+    if (!changed.has('open')) return;
+    if (this.open) {
+      this._positionMenu();
+      this._menuEl.showPopover();
+    } else if (this._menuEl.matches(':popover-open')) {
+      this._menuEl.hidePopover();
+    }
+  }
+
+  private _positionMenu() {
+    const triggerEl = this._triggerSlot?.assignedElements()[0] as HTMLElement | undefined;
+    if (!triggerEl) return;
+    const rect = triggerEl.getBoundingClientRect();
+    this._menuEl.style.top = `${rect.bottom + 4}px`;
+    this._menuEl.style.left = `${rect.left}px`;
+  }
+
+  private _onViewportChange = () => {
+    if (this.open) this._positionMenu();
+  };
 
   private _onDocumentClick = (event: MouseEvent) => {
     if (!this.open) return;
@@ -121,7 +155,7 @@ export class PaiDropdown extends PaiElement {
       <span class="trigger" @click=${this._toggle} @keydown=${this._onTriggerKeydown}>
         <slot name="trigger" class="trigger-slot" aria-haspopup="true" aria-expanded=${this.open}></slot>
       </span>
-      <div class="menu" role="menu" ?hidden=${!this.open} @keydown=${this._onMenuKeydown}>
+      <div class="menu" popover="manual" role="menu" @keydown=${this._onMenuKeydown}>
         <slot class="menu-slot"></slot>
       </div>
     `;

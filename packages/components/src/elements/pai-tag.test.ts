@@ -16,6 +16,17 @@ describe('pai-tag', () => {
     expect(event).to.exist;
   });
 
+  it('reflects variant independently of color', async () => {
+    const el = await fixture<PaiTag>(html`<pai-tag color="success" variant="outlined">Beta</pai-tag>`);
+    expect(el.getAttribute('color')).to.equal('success');
+    expect(el.getAttribute('variant')).to.equal('outlined');
+  });
+
+  it('defaults to the filled variant', async () => {
+    const el = await fixture<PaiTag>(html`<pai-tag>Beta</pai-tag>`);
+    expect(el.getAttribute('variant')).to.equal('filled');
+  });
+
   it('is accessible', async () => {
     const el = await fixture<PaiTag>(html`<pai-tag dismissible>Beta</pai-tag>`);
     await expect(el).to.be.accessible();

@@ -42,6 +42,15 @@
   --pai-space-5: 1.5rem;
   --pai-space-6: 3rem;
 
+  /* Spacing — named scale (preferred vocabulary going forward; aliases the numeric
+     scale above so nothing that already references --pai-space-N breaks). */
+  --pai-space-3xs: var(--pai-space-1);
+  --pai-space-2xs: var(--pai-space-2);
+  --pai-space-xs: var(--pai-space-3);
+  --pai-space-sm: var(--pai-space-4);
+  --pai-space-md: var(--pai-space-5);
+  --pai-space-lg: var(--pai-space-6);
+
   /* Typography */
   --pai-font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   --pai-font-family-monospace: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
@@ -52,6 +61,17 @@
   --pai-font-size-5: 1.25rem;
   --pai-font-size-6: 1rem;
   --pai-font-size-7: 0.75rem;
+
+  /* Typography — named scale (preferred vocabulary going forward; aliases the numeric
+     scale above). */
+  --pai-font-size-xs: var(--pai-font-size-7);
+  --pai-font-size-sm: var(--pai-font-size-6);
+  --pai-font-size-md: var(--pai-font-size-5);
+  --pai-font-size-lg: var(--pai-font-size-4);
+  --pai-font-size-xl: var(--pai-font-size-3);
+  --pai-font-size-2xl: var(--pai-font-size-2);
+  --pai-font-size-3xl: var(--pai-font-size-1);
+
   --pai-font-weight-light: 300;
   --pai-font-weight-normal: 400;
   --pai-font-weight-medium: 500;
@@ -89,6 +109,14 @@
   --pai-duration-normal: 200ms;
   --pai-duration-slow: 300ms;
   --pai-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Accent surface — solid by default; themes like `nova` override with a gradient.
+     Consumed via the `background` shorthand (not `background-color`) so it can hold
+     either a color or a gradient function. */
+  --pai-gradient-accent: var(--pai-color-primary);
+
+  /* Surface blur — off by default; themes like `nova` override for a glass effect. */
+  --pai-surface-backdrop-filter: none;
 }
 
 :root[data-theme='dark'] {
@@ -97,4 +125,182 @@
   --pai-color-text: var(--pai-color-grey-lighter);
   --pai-color-text-strong: var(--pai-color-white);
   --pai-color-border: var(--pai-color-grey);
+}
+
+/* Ocean — cool blues/teals, soft rounded shapes */
+:root[data-theme='ocean'] {
+  --pai-color-primary: #0891b2;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #2563eb;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #0ea5e9;
+  --pai-color-info-invert: #ffffff;
+  --pai-color-success: #10b981;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #f59e0b;
+  --pai-color-warning-invert: #ffffff;
+  --pai-color-danger: #ef4444;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #f0f9ff;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #0c4a6e;
+  --pai-color-text-strong: #082f49;
+  --pai-color-border: #bae6fd;
+}
+
+/* Sunset — warm orange/pink, friendly oversized rounding */
+:root[data-theme='sunset'] {
+  --pai-color-primary: #f97316;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #db2777;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #f59e0b;
+  --pai-color-info-invert: #ffffff;
+  --pai-color-success: #22c55e;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #eab308;
+  --pai-color-warning-invert: #ffffff;
+  --pai-color-danger: #dc2626;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #fff7ed;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #7c2d12;
+  --pai-color-text-strong: #431407;
+  --pai-color-border: #fed7aa;
+  --pai-radius-small: 4px;
+  --pai-radius-normal: 10px;
+  --pai-radius-large: 16px;
+}
+
+/* Forest — earthy greens/teals */
+:root[data-theme='forest'] {
+  --pai-color-primary: #16a34a;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #0d9488;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #0891b2;
+  --pai-color-info-invert: #ffffff;
+  --pai-color-success: #22c55e;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #ca8a04;
+  --pai-color-warning-invert: #ffffff;
+  --pai-color-danger: #dc2626;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #f0fdf4;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #14532d;
+  --pai-color-text-strong: #052e16;
+  --pai-color-border: #bbf7d0;
+}
+
+/* Slate — neutral corporate, sharp minimal rounding */
+:root[data-theme='slate'] {
+  --pai-color-primary: #4f46e5;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #4338ca;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #0284c7;
+  --pai-color-info-invert: #ffffff;
+  --pai-color-success: #059669;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #d97706;
+  --pai-color-warning-invert: #ffffff;
+  --pai-color-danger: #dc2626;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #f8fafc;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #1e293b;
+  --pai-color-text-strong: #0f172a;
+  --pai-color-border: #cbd5e1;
+  --pai-radius-small: 2px;
+  --pai-radius-normal: 3px;
+  --pai-radius-large: 4px;
+}
+
+/* Bootstrap — flat, minimal-shadow preset mimicking Bootstrap 5's design language.
+   Proves the token system can reskin these components to sit alongside/inside a
+   Bootstrap-based app rather than clash with it. */
+:root[data-theme='bootstrap'] {
+  --pai-color-primary: #0d6efd;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #0d6efd;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #0dcaf0;
+  --pai-color-info-invert: #052c65;
+  --pai-color-success: #198754;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #ffc107;
+  --pai-color-warning-invert: #664d03;
+  --pai-color-danger: #dc3545;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #ffffff;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #212529;
+  --pai-color-text-strong: #000000;
+  --pai-color-border: #dee2e6;
+  --pai-font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --pai-radius-small: 4px;
+  --pai-radius-normal: 6px;
+  --pai-radius-large: 8px;
+  --pai-shadow-small: 0 1px 2px rgba(0, 0, 0, 0.075);
+  --pai-shadow-normal: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --pai-shadow-large: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+}
+
+/* Material — rounded, elevated preset mimicking Material Design 3. Proves the token
+   system can reskin these components to sit alongside/inside a Material-based app. */
+:root[data-theme='material'] {
+  --pai-color-primary: #6750a4;
+  --pai-color-primary-invert: #ffffff;
+  --pai-color-link: #6750a4;
+  --pai-color-link-invert: #ffffff;
+  --pai-color-info: #0061a4;
+  --pai-color-info-invert: #ffffff;
+  --pai-color-success: #2e7d32;
+  --pai-color-success-invert: #ffffff;
+  --pai-color-warning: #825500;
+  --pai-color-warning-invert: #ffffff;
+  --pai-color-danger: #ba1a1a;
+  --pai-color-danger-invert: #ffffff;
+  --pai-color-background: #fffbfe;
+  --pai-color-surface: #ffffff;
+  --pai-color-text: #1c1b1f;
+  --pai-color-text-strong: #000000;
+  --pai-color-border: #cac4d0;
+  --pai-font-family: 'Roboto', system-ui, -apple-system, Arial, sans-serif;
+  --pai-radius-small: 8px;
+  --pai-radius-normal: 20px;
+  --pai-radius-large: 28px;
+  --pai-shadow-small: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --pai-shadow-normal: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --pai-shadow-large: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Nova — dark-first, gradient-accented, glow-on-focus preset for an "AI product" look. */
+:root[data-theme='nova'] {
+  --pai-color-primary: #a78bfa;
+  --pai-color-primary-invert: #0b0e1a;
+  --pai-color-link: #818cf8;
+  --pai-color-link-invert: #0b0e1a;
+  --pai-color-info: #38bdf8;
+  --pai-color-info-invert: #0b0e1a;
+  --pai-color-success: #34d399;
+  --pai-color-success-invert: #0b0e1a;
+  --pai-color-warning: #fbbf24;
+  --pai-color-warning-invert: #0b0e1a;
+  --pai-color-danger: #fb7185;
+  --pai-color-danger-invert: #0b0e1a;
+  --pai-color-background: #0b0e1a;
+  --pai-color-surface: rgba(30, 27, 55, 0.6);
+  --pai-color-text: #cbd5e1;
+  --pai-color-text-strong: #f8fafc;
+  --pai-color-border: rgba(167, 139, 250, 0.25);
+  --pai-radius-small: 6px;
+  --pai-radius-normal: 10px;
+  --pai-radius-large: 16px;
+  --pai-shadow-small: 0 0 0 1px rgba(167, 139, 250, 0.15);
+  --pai-shadow-normal: 0 8px 24px -4px rgba(139, 92, 246, 0.35);
+  --pai-shadow-large: 0 16px 48px -8px rgba(139, 92, 246, 0.45);
+  --pai-gradient-accent: linear-gradient(135deg, #8b5cf6, #3b82f6);
+  --pai-surface-backdrop-filter: blur(16px);
 }

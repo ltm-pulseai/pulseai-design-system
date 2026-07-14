@@ -16,7 +16,8 @@ export class PaiNavbar extends PaiElement {
     css`
       :host {
         display: block;
-        background-color: var(--pai-color-white);
+        background-color: var(--pai-color-surface);
+        border-bottom: 1px solid var(--pai-color-border);
         box-shadow: var(--pai-shadow-small);
       }
       .navbar {

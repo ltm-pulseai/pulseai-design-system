@@ -7,9 +7,9 @@ const meta: Meta = {
   tags: ['autodocs'],
   render: () => html`
     <pai-breadcrumb>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Docs</a></li>
-      <li><a href="#">Button</a></li>
+      <a href="#">Home</a>
+      <a href="#">Docs</a>
+      <a href="#">Button</a>
     </pai-breadcrumb>
   `,
 };

@@ -6,9 +6,9 @@ describe('pai-breadcrumb', () => {
   it('marks the last link aria-current=page', async () => {
     const el = await fixture<PaiBreadcrumb>(html`
       <pai-breadcrumb>
-        <li><a href="/">Home</a></li>
-        <li><a href="/docs">Docs</a></li>
-        <li><a href="/docs/button">Button</a></li>
+        <a href="/">Home</a>
+        <a href="/docs">Docs</a>
+        <a href="/docs/button">Button</a>
       </pai-breadcrumb>
     `);
     await new Promise((r) => requestAnimationFrame(r));
@@ -18,13 +18,13 @@ describe('pai-breadcrumb', () => {
   });
 
   it('wraps content in a labeled nav', async () => {
-    const el = await fixture<PaiBreadcrumb>(html`<pai-breadcrumb><li><a href="/">Home</a></li></pai-breadcrumb>`);
+    const el = await fixture<PaiBreadcrumb>(html`<pai-breadcrumb><a href="/">Home</a></pai-breadcrumb>`);
     expect(el.shadowRoot!.querySelector('nav[aria-label="breadcrumb"]')).to.exist;
   });
 
   it('is accessible', async () => {
     const el = await fixture<PaiBreadcrumb>(html`
-      <pai-breadcrumb><li><a href="/">Home</a></li><li><a href="/docs">Docs</a></li></pai-breadcrumb>
+      <pai-breadcrumb><a href="/">Home</a><a href="/docs">Docs</a></pai-breadcrumb>
     `);
     await expect(el).to.be.accessible();
   });

@@ -1,4 +1,4 @@
-import { html, css, nothing } from 'lit';
+import { html, css } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { PaiElement } from '../base/pai-element.js';
 
@@ -6,9 +6,12 @@ const FOCUSABLE_SELECTOR =
   'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
- * @summary A modal dialog following the WAI-ARIA dialog pattern: `role="dialog"`
- * `aria-modal="true"`, a focus trap while open, `Escape` to close, and focus
- * restored to the previously-focused element on close.
+ * @summary A modal dialog built on the native `<dialog>` element (`showModal()`), so it
+ * renders in the browser's top layer — immune to clipping/positioning bugs from ancestor
+ * `overflow: hidden` or `transform` (e.g. a card, a scroll container, or Storybook's own
+ * docs-canvas zoom wrapper, which would otherwise trap a hand-rolled `position: fixed`
+ * overlay inside a tiny box). Native `<dialog>` also gives free focus containment,
+ * `Escape` handling, and focus restore to the invoking element on close.
  * @slot - Dialog title (heading element expected first for `aria-labelledby`).
  * @slot body - Dialog body content.
  * @slot footer - Action buttons.
@@ -23,29 +26,43 @@ export class PaiModal extends PaiElement {
       :host {
         display: contents;
       }
-      .backdrop {
+      dialog {
         position: fixed;
-        inset: 0;
-        z-index: var(--pai-z-overlay, 40);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: rgba(10, 10, 10, 0.6);
-      }
-      .backdrop[hidden] {
-        display: none;
-      }
-      .dialog {
-        position: relative;
+        margin: auto;
+        border: none;
         z-index: var(--pai-z-modal, 41);
         max-width: 40rem;
         width: calc(100% - 2 * var(--pai-space-4));
         max-height: calc(100vh - 2 * var(--pai-space-5));
         overflow: auto;
-        background-color: var(--pai-color-white);
+        background-color: var(--pai-color-surface);
+        color: var(--pai-color-text);
         border-radius: var(--pai-radius-large);
         box-shadow: var(--pai-shadow-large);
         padding: var(--pai-space-5);
+        animation: pai-modal-scale-in var(--pai-duration-normal) var(--pai-easing);
+      }
+      dialog::backdrop {
+        background-color: rgba(10, 10, 10, 0.6);
+        backdrop-filter: blur(2px);
+        animation: pai-modal-fade-in var(--pai-duration-normal) var(--pai-easing);
+      }
+      @keyframes pai-modal-fade-in {
+        from {
+          opacity: 0;
+        }
+      }
+      @keyframes pai-modal-scale-in {
+        from {
+          opacity: 0;
+          transform: scale(0.96) translateY(4px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        dialog,
+        dialog::backdrop {
+          animation: none;
+        }
       }
       .title {
         font-weight: var(--pai-font-weight-semibold);
@@ -78,30 +95,19 @@ export class PaiModal extends PaiElement {
   /** Closes the modal on backdrop click. Set false for a required-action dialog. */
   @property({ type: Boolean, attribute: 'close-on-backdrop' }) closeOnBackdrop = true;
 
-  @query('.dialog') private _dialog!: HTMLElement;
-
-  private _lastFocused: HTMLElement | null = null;
+  @query('dialog') private _dialogEl!: HTMLDialogElement;
 
   updated(changed: Map<string, unknown>) {
     if (!changed.has('open')) return;
-    if (this.open) {
-      this._lastFocused = document.activeElement as HTMLElement;
+    if (this.open && !this._dialogEl.open) {
+      this._dialogEl.showModal();
       this.updateComplete.then(() => {
-        const first = this._focusableElements()[0] ?? this._dialog;
-        first?.focus();
+        this._focusableElements()[0]?.focus();
       });
-      document.addEventListener('keydown', this._onKeydown);
       this.dispatchEvent(new CustomEvent('pai-open', { bubbles: true, composed: true }));
-    } else {
-      document.removeEventListener('keydown', this._onKeydown);
-      this._lastFocused?.focus();
-      this.dispatchEvent(new CustomEvent('pai-close', { bubbles: true, composed: true }));
+    } else if (!this.open && this._dialogEl.open) {
+      this._dialogEl.close();
     }
-  }
-
-  disconnectedCallback() {
-    document.removeEventListener('keydown', this._onKeydown);
-    super.disconnectedCallback();
   }
 
   /** Opens the modal programmatically. */
@@ -126,49 +132,27 @@ export class PaiModal extends PaiElement {
     return [...native, ...custom];
   }
 
-  private _onKeydown = (event: KeyboardEvent) => {
-    if (!this.open) return;
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      this.close();
-      return;
-    }
-    if (event.key !== 'Tab') return;
-
-    const focusable = this._focusableElements();
-    if (!focusable.length) {
-      event.preventDefault();
-      this._dialog.focus();
-      return;
-    }
-    const first = focusable[0]!;
-    const last = focusable[focusable.length - 1]!;
-    const active = document.activeElement;
-    if (event.shiftKey && active === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && active === last) {
-      event.preventDefault();
-      first.focus();
-    }
+  /** Native `<dialog>` close (Escape, `close()`, or form submission) — sync our state. */
+  private _onNativeClose = () => {
+    this.open = false;
+    this.dispatchEvent(new CustomEvent('pai-close', { bubbles: true, composed: true }));
   };
 
-  private _onBackdropClick = (event: MouseEvent) => {
-    if (this.closeOnBackdrop && event.target === event.currentTarget) {
+  /** A click that lands on the `<dialog>` element itself (not its content) hit the backdrop area. */
+  private _onDialogClick = (event: MouseEvent) => {
+    if (this.closeOnBackdrop && event.target === this._dialogEl) {
       this.close();
     }
   };
 
   render() {
     return html`
-      <div class="backdrop" ?hidden=${!this.open} @click=${this._onBackdropClick}>
-        <div class="dialog" role="dialog" aria-modal="true" aria-label="Dialog" tabindex="-1">
-          <button class="close" aria-label="Close" @click=${() => this.close()}>✕</button>
-          <div class="title"><slot></slot></div>
-          <slot name="body"></slot>
-          <div class="footer"><slot name="footer"></slot></div>
-        </div>
-      </div>
+      <dialog aria-labelledby="title" @close=${this._onNativeClose} @click=${this._onDialogClick}>
+        <button class="close" aria-label="Close" @click=${() => this.close()}>✕</button>
+        <div class="title" id="title"><slot></slot></div>
+        <slot name="body"></slot>
+        <div class="footer"><slot name="footer"></slot></div>
+      </dialog>
     `;
   }
 }

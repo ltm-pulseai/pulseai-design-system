@@ -41,7 +41,7 @@ export class PaiHero extends PaiElement {
       }
 
       :host([color='primary']) {
-        background-color: var(--pai-color-primary);
+        background: var(--pai-gradient-accent);
         color: var(--pai-color-primary-invert);
       }
       :host([color='link']) {

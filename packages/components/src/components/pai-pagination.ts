@@ -35,13 +35,17 @@ export class PaiPagination extends PaiElement {
         padding: 0 0.5em;
         border: 1px solid var(--pai-color-border);
         border-radius: var(--pai-radius-normal);
-        background-color: var(--pai-color-white);
+        background-color: var(--pai-color-surface);
         color: var(--pai-color-text);
         cursor: pointer;
         font: inherit;
+        transition: border-color var(--pai-duration-fast) var(--pai-easing),
+          background-color var(--pai-duration-fast) var(--pai-easing),
+          transform var(--pai-duration-fast) var(--pai-easing);
       }
       button:hover:not(:disabled) {
         border-color: var(--pai-color-grey-light);
+        transform: translateY(-1px);
       }
       button:focus-visible {
         outline: 2px solid var(--pai-color-link);
@@ -55,6 +59,7 @@ export class PaiPagination extends PaiElement {
         background-color: var(--pai-color-primary);
         border-color: var(--pai-color-primary);
         color: var(--pai-color-primary-invert);
+        box-shadow: var(--pai-shadow-small);
       }
       .ellipsis {
         padding: 0 0.5em;

@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/web-components';
 import { html } from 'lit';
 import '@pulseai/components/elements/pai-button.js';
-import type { PaiButtonColor, PaiButtonSize } from '@pulseai/components';
+import type { PaiButtonColor, PaiButtonVariant, PaiButtonSize } from '@pulseai/components';
 
 interface PaiButtonArgs {
   label: string;
   color: PaiButtonColor;
+  variant: PaiButtonVariant;
   size: PaiButtonSize;
-  outlined: boolean;
   rounded: boolean;
   fullWidth: boolean;
   disabled: boolean;
@@ -21,8 +21,8 @@ const meta: Meta<PaiButtonArgs> = {
   render: (args) => html`
     <pai-button
       color=${args.color}
+      variant=${args.variant}
       size=${args.size}
-      ?outlined=${args.outlined}
       ?rounded=${args.rounded}
       ?full-width=${args.fullWidth}
       ?disabled=${args.disabled}
@@ -35,7 +35,11 @@ const meta: Meta<PaiButtonArgs> = {
   argTypes: {
     color: {
       control: 'select',
-      options: ['default', 'primary', 'link', 'info', 'success', 'warning', 'danger', 'text'],
+      options: ['default', 'primary', 'link', 'info', 'success', 'warning', 'danger'],
+    },
+    variant: {
+      control: 'select',
+      options: ['filled', 'outlined', 'text', 'soft'],
     },
     size: {
       control: 'select',
@@ -45,8 +49,8 @@ const meta: Meta<PaiButtonArgs> = {
   args: {
     label: 'Click me',
     color: 'default',
+    variant: 'filled',
     size: 'normal',
-    outlined: false,
     rounded: false,
     fullWidth: false,
     disabled: false,
@@ -74,7 +78,17 @@ export const Colors: Story = {
       <pai-button color="success">Success</pai-button>
       <pai-button color="warning">Warning</pai-button>
       <pai-button color="danger">Danger</pai-button>
-      <pai-button color="text">Text</pai-button>
+    </div>
+  `,
+};
+
+export const Variants: Story = {
+  render: () => html`
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+      <pai-button color="primary" variant="filled">Filled</pai-button>
+      <pai-button color="primary" variant="outlined">Outlined</pai-button>
+      <pai-button color="primary" variant="soft">Soft</pai-button>
+      <pai-button color="primary" variant="text">Text</pai-button>
     </div>
   `,
 };

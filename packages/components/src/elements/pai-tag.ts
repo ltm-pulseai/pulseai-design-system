@@ -5,9 +5,11 @@ import type { PaiButtonColor } from './pai-button.js';
 import './pai-delete.js';
 
 export type PaiTagSize = 'normal' | 'medium' | 'large';
+export type PaiTagVariant = 'filled' | 'outlined' | 'soft';
 
 /**
- * @summary A small label/chip, like Bulma's `.tag`.
+ * @summary A small label/chip. Visual treatment (`variant`) and semantic intent
+ * (`color`) are independent props, so they compose freely (e.g. `variant="soft" color="success"`).
  * @slot - Tag label.
  * @fires pai-dismiss - Fired when the optional built-in delete button is activated.
  */
@@ -19,49 +21,77 @@ export class PaiTag extends PaiElement {
       :host {
         display: inline-flex;
         align-items: center;
-        gap: var(--pai-space-1);
+        gap: var(--pai-space-3xs);
         height: 2em;
         padding: 0 0.75em;
+        border: 1px solid transparent;
         border-radius: var(--pai-radius-normal);
         background-color: var(--pai-color-white-ter);
         color: var(--pai-color-text-strong);
-        font-size: var(--pai-font-size-7);
+        font-size: var(--pai-font-size-xs);
+        font-weight: var(--pai-font-weight-medium);
         line-height: 1.5;
         white-space: nowrap;
+        transition: transform var(--pai-duration-fast) var(--pai-easing);
       }
       :host([rounded]) {
         border-radius: var(--pai-radius-rounded);
       }
       :host([size='medium']) {
-        font-size: var(--pai-font-size-6);
+        font-size: var(--pai-font-size-sm);
       }
       :host([size='large']) {
-        font-size: var(--pai-font-size-5);
+        font-size: var(--pai-font-size-md);
       }
 
       :host([color='primary']) {
-        background-color: var(--pai-color-primary);
-        color: var(--pai-color-primary-invert);
+        --pai-tag-accent: var(--pai-color-primary);
+        --pai-tag-accent-invert: var(--pai-color-primary-invert);
       }
       :host([color='link']) {
-        background-color: var(--pai-color-link);
-        color: var(--pai-color-link-invert);
+        --pai-tag-accent: var(--pai-color-link);
+        --pai-tag-accent-invert: var(--pai-color-link-invert);
       }
       :host([color='info']) {
-        background-color: var(--pai-color-info);
-        color: var(--pai-color-info-invert);
+        --pai-tag-accent: var(--pai-color-info);
+        --pai-tag-accent-invert: var(--pai-color-info-invert);
       }
       :host([color='success']) {
-        background-color: var(--pai-color-success);
-        color: var(--pai-color-success-invert);
+        --pai-tag-accent: var(--pai-color-success);
+        --pai-tag-accent-invert: var(--pai-color-success-invert);
       }
       :host([color='warning']) {
-        background-color: var(--pai-color-warning);
-        color: var(--pai-color-warning-invert);
+        --pai-tag-accent: var(--pai-color-warning);
+        --pai-tag-accent-invert: var(--pai-color-warning-invert);
       }
       :host([color='danger']) {
-        background-color: var(--pai-color-danger);
-        color: var(--pai-color-danger-invert);
+        --pai-tag-accent: var(--pai-color-danger);
+        --pai-tag-accent-invert: var(--pai-color-danger-invert);
+      }
+
+      /* Filled (default) — solid accent background. Enumerated (not :not([color='default']))
+         so specificity matches the variant selectors below and source order decides. */
+      :host([color='primary']),
+      :host([color='link']),
+      :host([color='info']),
+      :host([color='success']),
+      :host([color='warning']),
+      :host([color='danger']) {
+        background-color: var(--pai-tag-accent);
+        color: var(--pai-tag-accent-invert);
+      }
+
+      /* Outlined — border + text in the accent color, transparent fill. */
+      :host([variant='outlined']) {
+        background-color: transparent;
+        border-color: var(--pai-tag-accent, var(--pai-color-border));
+        color: var(--pai-tag-accent, var(--pai-color-text-strong));
+      }
+
+      /* Soft — tinted low-opacity fill in the accent color. */
+      :host([variant='soft']) {
+        background-color: color-mix(in srgb, var(--pai-tag-accent, var(--pai-color-grey-light)) 15%, transparent);
+        color: var(--pai-tag-accent, var(--pai-color-text-strong));
       }
 
       pai-delete {
@@ -71,8 +101,11 @@ export class PaiTag extends PaiElement {
     `,
   ];
 
-  /** Background/text color variant. */
-  @property({ reflect: true }) color: PaiButtonColor | 'default' = 'default';
+  /** Semantic color intent. */
+  @property({ reflect: true }) color: PaiButtonColor = 'default';
+
+  /** Visual treatment — independent of `color`. */
+  @property({ reflect: true }) variant: PaiTagVariant = 'filled';
 
   /** Tag size. */
   @property({ reflect: true }) size: PaiTagSize = 'normal';

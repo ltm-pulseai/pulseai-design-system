@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "storybook dev -p 6006",
+    "dev": "node -e \"require('child_process').spawnSync('storybook',['dev','-p',process.env.PORT||'6006'],{stdio:'inherit',shell:true})\"",
     "build": "storybook build"
   },
   "dependencies": {
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@storybook/addon-a11y": "^8.3.0",
     "@storybook/addon-essentials": "^8.3.0",
+    "@storybook/blocks": "^8.3.0",
     "@storybook/web-components": "^8.3.0",
     "@storybook/web-components-vite": "^8.3.0",
     "storybook": "^8.3.0",

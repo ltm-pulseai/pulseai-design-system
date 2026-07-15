@@ -75,3 +75,40 @@ export type {
   PaiDataTableAlign,
   PaiDataTableSortDirection,
 } from './patterns/pai-data-table.js';
+
+// ── Lumen Logs / Agentic Log Analytics components ────────────────────────────
+
+export { PaiSparkline } from './elements/pai-sparkline.js';
+export { PaiStatusPill } from './elements/pai-status-pill.js';
+export { PaiSeverityDot } from './elements/pai-severity-dot.js';
+export type { PaiSeverityLevel } from './elements/pai-severity-dot.js';
+export { PaiEnvPill } from './elements/pai-env-pill.js';
+export type { PaiEnvPillEnv } from './elements/pai-env-pill.js';
+export { PaiSourceChip } from './elements/pai-source-chip.js';
+export { PaiCodeBlock } from './elements/pai-code-block.js';
+export type { PaiCodeBlockLang } from './elements/pai-code-block.js';
+export { PaiChatMessage } from './elements/pai-chat-message.js';
+export type { PaiChatRole } from './elements/pai-chat-message.js';
+export { PaiToolCall } from './elements/pai-tool-call.js';
+export { PaiDepNode } from './elements/pai-dep-node.js';
+export type { PaiDepNodeStatus } from './elements/pai-dep-node.js';
+export { PaiLineChart } from './elements/pai-line-chart.js';
+export type { PaiLineChartSeries } from './elements/pai-line-chart.js';
+export { PaiBarChart } from './elements/pai-bar-chart.js';
+export type { PaiBarChartBar } from './elements/pai-bar-chart.js';
+export { PaiSchemaViewer } from './elements/pai-schema-viewer.js';
+export type { PaiSchemaField } from './elements/pai-schema-viewer.js';
+
+export { PaiTimeline } from './components/pai-timeline.js';
+export type { PaiTimelineItem, PaiTimelineItemStatus } from './components/pai-timeline.js';
+export { PaiPipeline } from './components/pai-pipeline.js';
+export type { PaiPipelineStage, PaiPipelineStageStatus } from './components/pai-pipeline.js';
+export { PaiAskPanel } from './components/pai-ask-panel.js';
+
+export { PaiKpiCard } from './patterns/pai-kpi-card.js';
+export type { PaiKpiTrend } from './patterns/pai-kpi-card.js';
+export { PaiSidebar } from './patterns/pai-sidebar.js';
+export type { PaiSidebarItem, PaiSidebarSection } from './patterns/pai-sidebar.js';
+export { PaiAgentCard } from './patterns/pai-agent-card.js';
+export { PaiChatShell } from './patterns/pai-chat-shell.js';
+export { PaiToolCard } from './patterns/pai-tool-card.js';

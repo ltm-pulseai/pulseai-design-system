@@ -1,4 +1,4 @@
-import { html, css } from 'lit';
+import { html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { PaiElement } from '../base/pai-element.js';
 import { FormAssociatedMixin } from '../base/form-associated-mixin.js';
@@ -68,6 +68,10 @@ export class PaiCheckbox extends FormAssociatedMixin(PaiElement) {
   }
 
   render() {
+    // A host-level aria-label (common when there's no slotted label text, e.g. a
+    // table's row-select checkbox) can't cross the shadow boundary to name this
+    // input on its own — forward it explicitly so the input has a real accessible name.
+    const hostLabel = this.getAttribute('aria-label');
     return html`
       <label>
         <input
@@ -75,6 +79,7 @@ export class PaiCheckbox extends FormAssociatedMixin(PaiElement) {
           .checked=${this.checked}
           ?disabled=${this.disabled}
           ?required=${this.required}
+          aria-label=${hostLabel ?? nothing}
           @change=${this._onChange}
         />
         <slot></slot>

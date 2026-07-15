@@ -70,4 +70,8 @@ export { PaiLoginForm } from './patterns/pai-login-form.js';
 export { PaiPageHeader } from './patterns/pai-page-header.js';
 export type { PaiPageHeaderCrumb } from './patterns/pai-page-header.js';
 export { PaiDataTable } from './patterns/pai-data-table.js';
-export type { PaiDataTableColumn } from './patterns/pai-data-table.js';
+export type {
+  PaiDataTableColumn,
+  PaiDataTableAlign,
+  PaiDataTableSortDirection,
+} from './patterns/pai-data-table.js';

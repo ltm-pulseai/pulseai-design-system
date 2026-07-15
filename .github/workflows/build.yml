@@ -1,49 +1,69 @@
-name: Build & Publish Design System
+name: Build & Sync Design System
 
 on:
   push:
     branches:
       - main   # fires when a PR is merged to main
+    paths-ignore:
+      - '**.md'
 
 permissions:
-  contents: read
-  packages: write  # needed to publish to GitHub Packages
+  contents: write  # needed to commit version bump back to this repo
+  packages: read
 
 jobs:
-  build-and-publish:
-    name: Build & Publish
+  build-and-sync:
+    name: Build & Sync to Platform
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the repo
-      - name: Checkout
+      # 1. Check out the design system repo (with write access for version bump commit)
+      - name: Checkout design system
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Set up pnpm BEFORE Node so corepack can activate the right version
+      # 2. Set up pnpm before Node
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 11
 
-      # 3. Set up Node with the GitHub Packages registry baked in
+      # 3. Set up Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@pulseai'   # must match the package name prefix
 
-      # 4. Install all workspace dependencies
+      # 4. Install workspace dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Build all packages (tokens → styles → components)
+      # 5. Bump patch version in both packages
+      #    --no-git-tag-version: just updates package.json, no git tag
+      - name: Bump patch version
+        run: |
+          cd packages/tokens
+          npm version patch --no-git-tag-version
+          cd ../components
+          npm version patch --no-git-tag-version
+
+      # 6. Build all packages (tokens → components) with new version
       - name: Build packages
         run: pnpm build
 
-      # 6. Upload the compiled dist/ as a CI artifact
-      #    (handy for debugging and for consuming without a registry)
+      # 7. Commit the version bump back to design system repo
+      #    [skip ci] prevents this commit from re-triggering the workflow
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/tokens/package.json packages/components/package.json
+          git commit -m "chore: bump patch version [skip ci]"
+          git push
+
+      # 8. Upload dist as a CI artifact (useful for debugging)
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
@@ -51,14 +71,28 @@ jobs:
           path: packages/components/dist/
           retention-days: 30
 
-      # 7. Publish to GitHub Packages (tokens first, then components)
-      - name: Publish @pulseai/tokens
-        run: pnpm --filter @pulseai/tokens publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 9. Check out the platform repo into a subfolder
+      - name: Checkout pulseai-platform
+        uses: actions/checkout@v4
+        with:
+          repository: ltm-pulseai/pulseai-platform
+          path: pulseai-platform
+          token: ${{ secrets.PLATFORM_REPO_TOKEN }}
 
-      - name: Publish @pulseai/components
-        run: pnpm --filter @pulseai/components publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # NODE_AUTH_TOKEN is auto-provided by GITHUB_TOKEN — no manual secret needed
+      # 10. Clear old compiled files and copy fresh dist into packages/design-system
+      - name: Sync compiled files to platform repo
+        run: |
+          rm -rf pulseai-platform/packages/design-system/dist
+          mkdir -p pulseai-platform/packages/design-system
+          cp -r packages/components/dist pulseai-platform/packages/design-system/dist
+          cp packages/components/package.json pulseai-platform/packages/design-system/package.json
+
+      # 11. Commit and push the updated files to pulseai-platform
+      - name: Commit and push to platform repo
+        run: |
+          cd pulseai-platform
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/design-system
+          git diff --cached --quiet || git commit -m "chore: sync design system dist from pulseai-design-system@${{ github.sha }}"
+          git push

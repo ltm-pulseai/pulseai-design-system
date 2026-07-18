@@ -7,6 +7,10 @@ on:
     paths-ignore:
       - '**.md'
 
+  pull_request:
+    branches:
+      - main   # fires automatically when a PR is raised or updated against main
+
   workflow_dispatch:  # manual trigger — adds "Run workflow" button in GitHub Actions UI
 
 permissions:
@@ -19,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the design system repo (with write access for version bump commit)
+      # 1. Check out the design system repo
       - name: Checkout design system
         uses: actions/checkout@v4
         with:
@@ -40,30 +44,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Bump patch version in both packages
-      #    --no-git-tag-version: just updates package.json, no git tag
-      - name: Bump patch version
-        run: |
-          cd packages/tokens
-          npm version patch --no-git-tag-version
-          cd ../components
-          npm version patch --no-git-tag-version
-
-      # 6. Build all packages (tokens → components) with new version
+      # 5. Build all packages (tokens → components)
       - name: Build packages
         run: pnpm build
 
-      # 7. Commit the version bump back to design system repo
-      #    [skip ci] prevents this commit from re-triggering the workflow
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add packages/tokens/package.json packages/components/package.json
-          git commit -m "chore: bump patch version [skip ci]"
-          git push
-
-      # 8. Upload dist as a CI artifact (useful for debugging)
+      # 6. Upload dist as a CI artifact — available on every PR and merge
       - name: Upload dist artifact
         uses: actions/upload-artifact@v4
         with:
@@ -71,24 +56,49 @@ jobs:
           path: packages/components/dist/
           retention-days: 30
 
-      # 9. Check out the platform repo into a subfolder
+      # Steps 7-10 only run on merge to main — not on PR builds
+      # Prevents spamming pulseai-platform with every PR commit
+
+      # 7. Bump patch version — only on merge
+      - name: Bump patch version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cd packages/tokens
+          npm version patch --no-git-tag-version
+          cd ../components
+          npm version patch --no-git-tag-version
+
+      # 8. Commit version bump back to design system repo
+      - name: Commit version bump
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/tokens/package.json packages/components/package.json
+          git commit -m "chore: bump patch version [skip ci]"
+          git push
+
+      # 9. Check out the platform repo — only on merge
       - name: Checkout pulseai-platform
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/checkout@v4
         with:
           repository: ltm-pulseai/pulseai-platform
           path: pulseai-platform
           token: ${{ secrets.PLATFORM_REPO_TOKEN }}
 
-      # 10. Clear old compiled files and copy fresh dist into packages/design-system
+      # 10. Copy fresh dist into packages/design-system — only on merge
       - name: Sync compiled files to platform repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           rm -rf pulseai-platform/packages/design-system/dist
           mkdir -p pulseai-platform/packages/design-system
           cp -r packages/components/dist pulseai-platform/packages/design-system/dist
           cp packages/components/package.json pulseai-platform/packages/design-system/package.json
 
-      # 11. Commit and push the updated files to pulseai-platform
+      # 11. Commit and push to pulseai-platform — only on merge
       - name: Commit and push to platform repo
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           cd pulseai-platform
           git config user.name "github-actions[bot]"

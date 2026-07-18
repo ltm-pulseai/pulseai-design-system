@@ -23,17 +23,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. Set up pnpm before Node
+      # 2. Set up pnpm — version is read from packageManager field in package.json
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 11
 
       # 3. Set up Node
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22.x'
           cache: 'pnpm'
 
       # 4. Install workspace dependencies

@@ -7,6 +7,8 @@ on:
     paths-ignore:
       - '**.md'
 
+  workflow_dispatch:  # manual trigger — adds "Run workflow" button in GitHub Actions UI
+
 permissions:
   contents: write  # needed to commit version bump back to this repo
   packages: read
